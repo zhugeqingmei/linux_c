@@ -106,7 +106,7 @@ void lockSet(int fd,int type)
     while(1)
     {
         lock.l_type=type;
-        if((fcntl(fd,F_SETLK64,&lock))==0)
+        if((fcntl(fd,F_SETLK64,&lock))==0)//only set the lock,can into the block
         {
             if(lock.l_type==F_RDLCK)
                 printf("read lock set by %d\n",getpid());
@@ -128,6 +128,7 @@ void lockSet(int fd,int type)
         }
     }
 }
+//
 void testLockSet()
 {
     int fd;
@@ -144,6 +145,9 @@ void testLockSet()
     close(fd);
     exit(0);
 }
+//lear select cmd
+void
+
 void systemProMain()
 {
     //getLibCVersion();
