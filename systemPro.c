@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "csapp.h"
 
 //display the version of the glibc
@@ -146,7 +147,70 @@ void testLockSet()
     exit(0);
 }
 //lear select cmd
-void
+void testSelect()
+{
+    int fds[2];
+    char buf[7];
+    int i,rc,maxfd,temp;
+    fd_set inset1,inset2;
+    struct timeval tv;
+
+    if((fds[0]=open("hello1",O_RDWR|O_CREAT,0666))<0)
+        perror(fds[0]=open("hello1",O_RDWR|O_CREAT,0666));
+    if((fds[1]=open("hello2",O_RDWR|O_CREAT,0666))<0)
+        perror("open hello2");
+    //write something to fds[0]
+    if((rc=write(fds[0],"Hello!\n",7)))
+        printf("rc=%d\n",rc);
+    lseek(fds[0],0,SEEK_SET);
+    maxfd=fds[0]>fds[1]?fds[0]:fds[1];
+
+    FD_ZERO(&inset1);
+    FD_SET(fds[0],&inset1);
+
+    FD_ZERO(&inset2);
+    FD_SET(fds[1],&inset2);
+
+    tv.tv_sec=2;
+    tv.tv_usec=0;
+    //FD_ISSET:Returns a non-zero value if the bit for the file descriptor fd is set in the file descriptor set pointed to by fdset, and 0 otherwise.
+    while(FD_ISSET(fds[0],&inset1)||FD_ISSET(fds[1],&inset2))
+    {
+        if(select(maxfd+1,&inset1,&inset2,NULL,&tv)<0)
+            perror("select");
+        else{
+            temp=FD_ISSET(fds[0],&inset1);
+            printf("temp read:%d\n",temp);
+            if(temp)
+            {
+                rc=read(fds[0],buf,7);
+                if(rc>0)
+                {
+                    buf[rc]='\0';
+                    printf("read:%s\n",buf);
+                }else
+                {
+                    perror("read");
+                }
+                lseek(fds[0],0,SEEK_SET);
+            }
+            if(FD_ISSET(fds[1],&inset2))
+            {
+                rc=write(fds[1],buf,7);
+                if(rc>0)
+                {
+                    buf[rc]='\0';
+                    printf("rc=%d,write:%s\n",rc,buf);
+                }else
+                {
+                    perror("write");
+                }
+            sleep(10);
+            }
+        }
+    }
+    exit(0);
+}
 
 void systemProMain()
 {
@@ -154,7 +218,8 @@ void systemProMain()
     //teseOpenClose();
     //testCsapp10_1();
     //testWrite();
-    testLockSet();
+    //testLockSet();
+    testSelect();
 }
 
 
