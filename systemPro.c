@@ -156,7 +156,7 @@ void testSelect()
     struct timeval tv;
 
     if((fds[0]=open("hello1",O_RDWR|O_CREAT,0666))<0)
-        perror(fds[0]=open("hello1",O_RDWR|O_CREAT,0666));
+        perror("open hello1");
     if((fds[1]=open("hello2",O_RDWR|O_CREAT,0666))<0)
         perror("open hello2");
     //write something to fds[0]
@@ -214,12 +214,12 @@ void testSelect()
 
 void systemProMain()
 {
-    //getLibCVersion();
+    getLibCVersion();
     //teseOpenClose();
     //testCsapp10_1();
     //testWrite();
     //testLockSet();
-    testSelect();
+    //testSelect();
 }
 
 
