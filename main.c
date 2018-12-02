@@ -4,7 +4,47 @@
 
 void print_diamond(int n,char c)
 {
+    if(n%2==0)
+        printf("even number!\n");
+    int x[50],space[50];
+    int i,j,x_index,space_index;
 
+    j=0;
+    for(i=1;i<n+1;i+=2)
+    {
+        x[j++]=i;
+    }
+    for(i=n-2;i>0;i-=2)
+    {
+        x[j++]=i;
+    }
+
+    i=(n-1)/2;
+    j=0;
+    for(;i>=0;i--)
+    {
+        space[j++]=i;
+    }
+    for(i=1;i<=(n-1)/2;i++)
+    {
+        space[j++]=i;
+    }
+    x_index=0;
+    space_index=0;
+    for(i=0;i<n;i++)
+    {
+        j=space[space_index++];
+        for(;j>0;j--)
+        {
+            printf(" \t");
+        }
+        j=x[x_index++];
+        for(;j>0;j--)
+        {
+            printf("*\t");
+        }
+        printf("\n");
+    }
 }
 
 void print_9X9()
@@ -155,7 +195,9 @@ int main()
 //    printf("is_prime(19):%d\n",is_prime(19));
 //    printf("5%%1=%d\n",5%1);
     //print_prime();
-    print_9X9();
+    //print_9X9();
+    print_diamond(5,'*');
+    print_diamond(13,'*');
     return 0;
 }
 
