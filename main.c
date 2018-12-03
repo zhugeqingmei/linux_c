@@ -1,13 +1,15 @@
-#include "stdio.h"
-#include "math.h"
+#include <stdio.h>
+#include <math.h>
 #include "systemPro.h"
 #include "my_complex.h"
+#include <stdlib.h>
+#include <limits.h>
 void test_struct()
 {
-    struct complex
-    {
-        double x,y;
-    }z={1.0,1.0};//right
+//    struct complex
+//    {
+//        double x,y;
+//    }z={1.0,1.0};//right
     //z={1.0,1.0};//wrong
 }
 void print_diamond(int n,char c)
@@ -181,6 +183,12 @@ void foo()
     printf("i=%d\n",i);
     i=77;
 }
+void test_array()
+{
+    printf("%d\n",RAND_MAX);//2147483647
+    printf("%d\n",INT_MAX);//2147483647
+
+}
 
 int main()
 {
@@ -207,7 +215,9 @@ int main()
 //    print_diamond(5,'*');
 //    print_diamond(13,'*');
     //test_complex();
-    test_rational();
+    //test_rational();
+    //test_array();
+    //excise();
     return 0;
 }
 

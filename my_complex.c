@@ -3,33 +3,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//using two kind of form to represent the complex
+enum coordinate_type{RECTANGULAR=1,POLAR};
+
 struct complex_struct
 {
+    enum coordinate_type t;
     double x, y;
 };
 double real_part(struct complex_struct z)
 {
-    return z.x;
+    if(z.t==RECTANGULAR)
+        return z.x;
+    else
+        return z.x * cos(z.y);
 }
 double img_part(struct complex_struct z)
 {
-    return z.y;
+    if(z.t==RECTANGULAR)
+        return z.y;
+    else
+        return z.x*sin(z.y);
 }
 double magnitude(struct complex_struct z)
 {
-    return sqrt(z.x * z.x + z.y * z.y);
+    if(z.t==RECTANGULAR)
+        return sqrt(z.x * z.x + z.y * z.y);
+    else
+        return z.x;
 }
 double angle(struct complex_struct z)
 {
-    double PI = acos(-1.0);
-    if (z.x > 0)
-        return atan(z.y / z.x);
+    if(z.t==RECTANGULAR)
+    {
+        double PI = acos(-1.0);
+        if (z.x > 0)
+            return atan(z.y / z.x);
+        else
+            return atan(z.y / z.x) + PI;
+    }
     else
-        return atan(z.y / z.x) + PI;
+    {
+        return z.y;
+    }
 }
 struct complex_struct make_from_real_img(double x, double y)
 {
     struct complex_struct z;
+    z.t=RECTANGULAR;
     z.x = x;
     z.y = y;
     return z;
@@ -37,8 +58,9 @@ struct complex_struct make_from_real_img(double x, double y)
 struct complex_struct make_from_mag_ang(double r, double A)
 {
     struct complex_struct z;
-    z.x = r * cos(A);
-    z.y = r * sin(A);
+    z.t=POLAR;
+    z.x=r;
+    z.y=A;
     return z;
 }
 //
@@ -87,6 +109,7 @@ struct complex_struct make_from_mag_ang(double r, double A)
 
 
 //+-*/
+//3kinds:two polar,two rectangular,one polar and one rectangular
 struct complex_struct add_complex(struct complex_struct z1, struct
 complex_struct z2)
 {
@@ -138,13 +161,17 @@ void print_complex(struct complex_struct z)
 }
 void test_complex()
 {
-    struct complex_struct z1={1,9};
-    struct complex_struct z2={-1,9};
-    struct complex_struct z3={1,-9};
-    struct complex_struct z4={-1,-9};
-    struct complex_struct z5={-1,0};
-    struct complex_struct z6={0,-9};
-    struct complex_struct z7={0,0};
+    struct complex_struct z1=make_from_real_img(1,1);
+    printf("angle:%f\n",angle(z1));
+    printf("magnitude:%f\n",magnitude(z1));
+
+
+    struct complex_struct z2=make_from_real_img(-1,9);
+    struct complex_struct z3=make_from_real_img(1,-9);
+    struct complex_struct z4=make_from_real_img(-1,-9);
+    struct complex_struct z5=make_from_real_img(-1,0);
+    struct complex_struct z6=make_from_real_img(1,-9);
+    struct complex_struct z7=make_from_real_img(1,0);
     print_complex(z1);
     print_complex(z2);
     print_complex(z3);
@@ -275,4 +302,16 @@ void test_rational()
     print_rational(div_rational(z,z3));
 
 }
-
+//OVRWRITE THE ENUM VARIABLE.
+//void excise()
+//{
+//    int RECTANGULAR;
+//    printf("%d,%d\n",RECTANGULAR,POLAR);
+//}
+//#define SHITMAN 11
+//#define SHITMANS 22
+//void exciseV2()
+//{
+//    int SHITMAN;
+//    printf("%d %d\n",SHITMAN,SHITMANS);
+//}
