@@ -156,6 +156,13 @@ void test_complex()
 
 extern int my_gcd(int a,int b);
 
+//最大公约数
+int my_gysh(int a,int b)
+{
+    int g=my_gcd(a,b);
+    return a*b/g;
+}
+
 struct rational_struct
 {
     int a;
@@ -166,7 +173,10 @@ struct rational_struct make_rational(int a,int b)
     if(b==0)
         printf("b!=0\n");
     if(b<0)
+    {
         a*=-1;
+        b*=-1;
+    }
     int a_cpy=abs(a);
     int g=my_gcd(a_cpy,b);
     if(g!=1)
@@ -187,12 +197,82 @@ int rational_get_den(struct rational_struct z)
 }
 void print_rational(struct rational_struct a)
 {
-    printf("%d\%d\n",rational_get_num(a),rational_get_den(a));
+    int num=rational_get_num(a);
+    int den=rational_get_den(a);
+    if(den==1)
+    {
+        printf("%d\n",num);
+    }else
+    {
+        printf("%d/%d\n",num,den);
+    }
 }
+struct rational_struct add_rational(struct rational_struct z1,struct rational_struct z2)
+{
+    int den1,den2,num1,num2;
+    den1=rational_get_den(z1);
+    den2=rational_get_den(z2);
+    int number_gysh=my_gysh(den1,den2);//这是新的分母
+    num1=rational_get_num(z1)*number_gysh/den1;//这是新的分子
+    num2=rational_get_num(z2)*number_gysh/den2;//这是新的分子
+    return make_rational(num1+num2,number_gysh);
+}
+struct rational_struct sub_rational(struct rational_struct z1,struct rational_struct z2)
+{
+    int den1,den2,num1,num2;
+    den1=rational_get_den(z1);
+    den2=rational_get_den(z2);
+    int number_gysh=my_gysh(den1,den2);//这是新的分母
+    num1=rational_get_num(z1)*number_gysh/den1;//这是新的分子
+    num2=rational_get_num(z2)*number_gysh/den2;//这是新的分子
+    return make_rational(num1-num2,number_gysh);
+}
+struct rational_struct mul_rational(struct rational_struct z1,struct rational_struct z2)
+{
+    int den1,den2,num1,num2;
+    den1=rational_get_den(z1);
+    den2=rational_get_den(z2);
 
-void test_ratinal()
+    num1=rational_get_num(z1);//这是新的分子
+    num2=rational_get_num(z2);//这是新的分子
+    return make_rational(num1*num2,den1*den2);
+}
+struct rational_struct div_rational(struct rational_struct z1,struct rational_struct z2)
+{
+    int den1,den2,num1,num2;
+    den1=rational_get_den(z1);
+    den2=rational_get_den(z2);
+
+    num1=rational_get_num(z1);//这是新的分子
+    num2=rational_get_num(z2);//这是新的分子
+    return make_rational(num1*den2,den1*num2);
+}
+void test_rational()
 {
     struct rational_struct z=make_rational(1,3);
+    struct rational_struct z1=make_rational(3,6);
+    struct rational_struct z2=make_rational(3,-6);
+    struct rational_struct z3=make_rational(3,-3);
     print_rational(z);
+    print_rational(z1);
+    print_rational(z2);
+    print_rational(z3);
+
+    print_rational(add_rational(z,z1));
+    print_rational(add_rational(z,z2));
+    print_rational(add_rational(z,z3));
+
+    print_rational(sub_rational(z,z1));
+    print_rational(sub_rational(z,z2));
+    print_rational(sub_rational(z,z3));
+
+    print_rational(mul_rational(z,z1));
+    print_rational(mul_rational(z,z2));
+    print_rational(mul_rational(z,z3));
+
+    print_rational(div_rational(z,z1));
+    print_rational(div_rational(z,z2));
+    print_rational(div_rational(z,z3));
+
 }
 
