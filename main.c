@@ -1,7 +1,15 @@
 #include "stdio.h"
 #include "math.h"
 #include "systemPro.h"
-
+#include "my_complex.h"
+void test_struct()
+{
+    struct complex
+    {
+        double x,y;
+    }z={1.0,1.0};//right
+    //z={1.0,1.0};//wrong
+}
 void print_diamond(int n,char c)
 {
     if(n%2==0)
@@ -196,8 +204,10 @@ int main()
 //    printf("5%%1=%d\n",5%1);
     //print_prime();
     //print_9X9();
-    print_diamond(5,'*');
-    print_diamond(13,'*');
+//    print_diamond(5,'*');
+//    print_diamond(13,'*');
+    //test_complex();
+    test_rational();
     return 0;
 }
 
