@@ -218,6 +218,7 @@ int main()
     //test_rational();
     //test_array();
     //excise();
+    test_rand();
     return 0;
 }
 

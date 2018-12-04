@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 //using two kind of form to represent the complex
 enum coordinate_type{RECTANGULAR=1,POLAR};
@@ -159,6 +160,7 @@ void print_complex(struct complex_struct z)
         printf("%fi\n",imag);
     }
 }
+//---------------------------------------------------------
 void test_complex()
 {
     struct complex_struct z1=make_from_real_img(1,1);
@@ -274,6 +276,7 @@ struct rational_struct div_rational(struct rational_struct z1,struct rational_st
     num2=rational_get_num(z2);//这是新的分子
     return make_rational(num1*den2,den1*num2);
 }
+//-------------------------------------------------------------
 void test_rational()
 {
     struct rational_struct z=make_rational(1,3);
@@ -302,6 +305,7 @@ void test_rational()
     print_rational(div_rational(z,z3));
 
 }
+//----------------------------------------------------
 //OVRWRITE THE ENUM VARIABLE.
 //void excise()
 //{
@@ -315,3 +319,34 @@ void test_rational()
 //    int SHITMAN;
 //    printf("%d %d\n",SHITMAN,SHITMANS);
 //}
+//------------------------------------------------------
+//ex8.3
+#define N   100000
+#define M   10
+int a[N];
+int count_a[M];
+
+void test_rand()
+{
+    int i;
+    srand(time(NULL));
+    for(i=0;i<N;i++)
+    {
+        a[i]=rand()%10;
+        count_a[a[i]]++;
+    }
+    for(i=0;i<M;i++)
+    {
+        printf("%d:%d\n",i,count_a[i]);
+
+    }
+}
+
+
+
+
+
+
+
+
+
