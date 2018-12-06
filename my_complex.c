@@ -341,6 +341,56 @@ void test_rand()
 
     }
 }
+//-------------------------------------------------------------------
+void ex8_5_scissor()
+{
+    char gesture[3][10]={"scissor","stone","cloth"};
+    int man,computer,result,ret;
+    srand(time(NULL));
+    while(1)
+    {
+        computer=rand()%3;
+        printf("\nInput your gesture (0-scissors 1-stone 2-cloth\n");
+        ret=scanf("%d",&man);
+        if(ret!=1 || man<0 || man>2)
+        {
+            printf("Invalid input!Please input 0,1or 2.\n");
+            continue;
+        }
+        printf("Your gesture:%s\tComputer's gesture:%s\n",gesture[man],gesture[computer]);
+        result=(man-computer+4)%3-1;
+        if(result>0)
+            printf("You win!\n");
+        else if(result==0)
+            printf("Draw!\n");
+        else
+            printf("You lose!\n");
+    }
+    return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

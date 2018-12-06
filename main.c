@@ -218,7 +218,8 @@ int main()
     //test_rational();
     //test_array();
     //excise();
-    test_rand();
+    //test_rand();
+    ex8_5_scissor();
     return 0;
 }
 
