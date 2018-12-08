@@ -1,5 +1,9 @@
 #include <stdio.h>
 
+#define LEN 5
+#define NEW_LEN 8
+int a[NEW_LEN] = {5, 2, 4, 7, 1, 3, 2, 6};
+int ordered_a[NEW_LEN] = {1, 3, 3, 3, 4, 5, 6, 7};
 int add_range(int low,int high)
 {
     int i,sum;
@@ -46,8 +50,6 @@ void excise_1()
     return;
 }
 
-#define LEN 5
-
 void insertion_sort()
 {
     int i, j, key;
@@ -69,9 +71,6 @@ void insertion_sort()
     printf("%d, %d, %d, %d, %d\n",a[0], a[1], a[2], a[3], a[4]);
 
 }
-
-#define NEW_LEN 8
-int a[NEW_LEN] = {5, 2, 4, 7, 1, 3, 2, 6};
 
 void merge(int start, int mid, int end)
 {
@@ -188,6 +187,35 @@ void quicksort(int start, int end)
     }
 }
 
+/*
+search item in ordered array,return the index,or -1.
+if the item appear has one more index, return anyone is ok.
+*/ 
+int binary_search(int number)
+{
+    int start, end, mid;
+    
+    start = 0;
+    end = NEW_LEN - 1;
+
+    while(start <= end)
+    {
+        mid = (start + end) / 2;
+
+        if(ordered_a[mid] == number)
+        {
+            return mid;
+        }else if(ordered_a[mid] < number)
+        {
+            start = mid + 1;
+        }else
+        {
+            end = mid - 1;
+        }
+    }
+    return -1;
+}
+
 int main(void)
 {
     //test_add_range();
@@ -195,6 +223,13 @@ int main(void)
     //excise_1();
     //insertion_sort();
     //sort(0,NEW_LEN-1);
-    quicksort(0,NEW_LEN-1);
+    //quicksort(0,NEW_LEN-1);
+    printf("binary search:%d\n",binary_search(4));
+    printf("binary search:%d\n",binary_search(8));
+    printf("binary search:%d\n",binary_search(7));
+    printf("binary search:%d\n",binary_search(6));
+    printf("binary search:%d\n",binary_search(5));
+    printf("binary search:%d\n",binary_search(0));
+    printf("binary search:%d\n",binary_search(3));
     return 0;
 }
