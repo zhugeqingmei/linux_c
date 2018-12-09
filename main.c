@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <math.h>
-#include "systemPro.h"
-#include "my_complex.h"
 #include <stdlib.h>
 #include <limits.h>
+#include "systemPro.h"
+#include "my_complex.h"
+#include "ex_10_1.h"
+
 void test_struct()
 {
 //    struct complex
@@ -220,6 +222,8 @@ int main()
     //excise();
     //test_rand();
     ex8_5_scissor();
+
+    //test_ex_10_1();
     return 0;
 }
 
