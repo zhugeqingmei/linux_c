@@ -221,9 +221,9 @@ int main()
     //test_array();
     //excise();
     //test_rand();
-    ex8_5_scissor();
+//    ex8_5_scissor();
 
-    //test_ex_10_1();
+    test_ex_10_1();
     return 0;
 }
 

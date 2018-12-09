@@ -3,20 +3,13 @@
 
 #define LEN 5
 #define NEW_LEN 8
-#define MAX_ROW 5
-#define MAX_COL 5
 
+static int top = 0;
 static int a[NEW_LEN] = {5, 2, 4, 7, 1, 3, 2, 6};
 static int ordered_a[NEW_LEN] = {1, 3, 3, 3, 4, 5, 6, 7};
-static int random_a[NEW_LEN] = {1, 30, 13, 23, -4, 105, 6, 7};
+static int random_a[NEW_LEN] = {10, 9, 8, 7, 6, 5, 4, 3};
 static char stack[512];
-static int top = 0;
-static int maze[5][5] = {
-                    0, 1, 0, 0, 0,
-                    0, 1, 0, 1, 0,
-                    0, 0, 0, 0, 0,
-                    0, 1, 1, 1, 0,
-                    0, 0, 0, 1, 0,};
+
 
 static int add_range(int low,int high)
 {
@@ -210,11 +203,12 @@ static int k_th_order_statistics(int a[], int n, int k)
 {
     int l, r;
 
-    l = 1;
+    l = 0;  //??
     r = n;
 
     while(1)
     {
+        printf("%d %d %d %d %d %d %d %d\n",a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
         if(r <= l + 1)
         {
             if(r == l + 1 && a[r] < a[l])
@@ -289,7 +283,7 @@ static void push(char c)
     top++;
 }
 
-char pop(void)
+static char pop(void)
 {
     top--;
     return stack[top];
@@ -314,6 +308,114 @@ void test_stack()
     }
 }
 
+/*
+solve the maze
+*/
+#define MAX_ROW 5
+#define MAX_COL 5
+
+//static int maze[MAX_ROW][MAX_COL] = {
+//                   {0, 1, 0, 0, 0},
+//                   {0, 1, 0, 1, 0},
+//                   {0, 0, 0, 0, 0},
+//                   {0, 1, 1, 1, 0},
+//                   {0, 0, 0, 1, 0}};
+static int maze[MAX_ROW][MAX_COL] = {
+                   {0, 0, 0, 0, 0},
+                   {0, 0, 0, 0, 0},
+                   {0, 0, 0, 0, 0},
+                   {0, 0, 0, 0, 0},
+                   {0, 0, 0, 0, 0}};
+
+struct point {int row, col;} maze_stack[512];
+
+
+static void maze_push(struct point p)
+{
+    maze_stack[top] = p;
+    top++;
+}
+
+static struct point maze_pop(void)
+{
+    top--;
+    return maze_stack[top];
+}
+
+void print_maze(void)
+{
+    int i, j;
+    for(i = 0; i < MAX_ROW; i++)
+    {
+        for(j = 0; j < MAX_COL; j++)
+        {
+            printf("%d ", maze[i][j]);
+        }
+        printf("\n");
+    }
+    printf("*******************************\n");
+}
+//??
+struct point predeccessor[MAX_ROW][MAX_COL]={
+    {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}},
+    {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}},
+    {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}},
+    {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}},
+    {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}}
+};
+
+static void visit(int row, int col, struct point pre)
+{
+
+    struct point visit_point = {row, col};
+    maze[row][col] = 2;
+    predeccessor[row][col] = pre;
+    maze_push(visit_point);
+
+}
+
+static int solve_maze()
+{
+    struct point p = {0, 0};
+
+    maze[p.row][p.col] = 2;
+    maze_push(p);
+
+    while(!is_empty())
+    {
+        p = maze_pop();
+        if(p.row == MAX_ROW - 1&& p.col == MAX_COL - 1)
+            break;
+        if(p.col + 1 < MAX_COL && maze[p.row][p.col + 1] == 0)
+            visit(p.row, p.col + 1, p);
+        if(p.row + 1 < MAX_ROW && maze[p.row + 1][p.col] == 0)
+            visit(p.row + 1, p.col, p);
+        if(p.row - 1 >= 0 && maze[p.row - 1][p.col] == 0)
+            visit(p.row - 1, p.col, p);
+        if(p.col - 1 >= 0 && maze[p.row][p.col - 1] == 0)
+            visit(p.row, p.col - 1, p);
+        print_maze();
+    }
+    if(p.row == MAX_ROW - 1 && p.col == MAX_COL - 1)
+    {
+        printf("(%d, %d)\n", p.row, p.col);
+        while(predeccessor[p.row][p.col].row != -1)//?
+        {
+            p = predeccessor[p.row][p.col];
+            printf("(%d, %d)\n", p.row, p.col);
+        }
+    }else{
+        printf("No path!\n");
+    }
+    return 0;
+}
+
+void test_maze(void)
+{
+    print_maze();
+    solve_maze();
+}
+
 int test_ex_10_1(void)
 {
     printf("I am in ex_10_1.c\n");
@@ -331,13 +433,16 @@ int test_ex_10_1(void)
     // printf("binary search:%d\n",binary_search(0));
     // printf("binary search:%d\n",binary_search(3));
 
-    // printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 1));
-    // printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 2));
-    // printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 3));
-    // printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 4));
-    // printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 5));
-    // printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, NEW_LEN - 1));
+//     printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 0));
+    //  printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 1));
+    //  printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 2));
+    //  printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 3));
+    //  printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 4));
+    //  printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, 5));
+    //  printf("k_th_order_statistics:%d\n", k_th_order_statistics(random_a, NEW_LEN - 1, NEW_LEN - 1));
 
-    test_stack();
+    //test_stack();
+
+    test_maze();
     return 0;
 }
