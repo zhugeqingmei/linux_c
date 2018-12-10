@@ -364,6 +364,23 @@ struct point predeccessor[MAX_ROW][MAX_COL]={
     {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}}
 };
 
+unsigned char pre[MAX_ROW][MAX_COL]={
+                                    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+                                    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+                                    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+                                    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+                                    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF}
+                                    };
+static void less_space_pre(int row, int col, struct point p)
+{
+    unsigned char temp = p.row << 4;
+    struct point visit_point = {row, col};
+    temp |= p.col;
+    pre[row][col] = temp;
+    maze[row][col] = 2;
+    maze_push(visit_point);
+}
+
 static void visit(int row, int col, struct point pre)
 {
 
@@ -372,6 +389,109 @@ static void visit(int row, int col, struct point pre)
     predeccessor[row][col] = pre;
     maze_push(visit_point);
 
+}
+
+static int solve_mazeV2()
+{
+    struct point p = {0, 0};
+
+    maze[p.row][p.col] = 2;
+    maze_push(p);
+
+    while(!is_empty())
+    {
+        p = maze_pop();
+        if(p.row == MAX_ROW - 1&& p.col == MAX_COL - 1)
+            break;
+        if(p.col + 1 < MAX_COL && maze[p.row][p.col + 1] == 0)
+            less_space_pre(p.row, p.col + 1, p);
+        if(p.row + 1 < MAX_ROW && maze[p.row + 1][p.col] == 0)
+            less_space_pre(p.row + 1, p.col, p);
+        if(p.row - 1 >= 0 && maze[p.row - 1][p.col] == 0)
+            less_space_pre(p.row - 1, p.col, p);
+        if(p.col - 1 >= 0 && maze[p.row][p.col - 1] == 0)
+            less_space_pre(p.row, p.col - 1, p);
+        print_maze();
+
+    }
+    while(!is_empty())
+    {
+        maze_pop();
+    }
+    if(p.row == MAX_ROW - 1 && p.col == MAX_COL - 1)
+    {
+        printf("(%d, %d)\n", p.row, p.col);
+        maze_push(p);
+        while(pre[p.row][p.col]!= 0xFF)
+        {
+            unsigned char t;
+            t = pre[p.row][p.col];
+            struct point pp = {t >> 4, t & 0x0F};
+            p = pp;
+            maze_push(p);
+            printf("(%d, %d)\n", p.row, p.col);
+        }
+        printf("print the forward path:\n");
+        while(!is_empty())
+        {
+            p = maze_pop();
+            printf("(%d, %d)\n", p.row, p.col);
+        }
+    }else{
+        printf("No path!\n");
+    }
+    return 0;
+}
+
+static struct point recurse_helper(int row, int col, struct point p)
+{
+    maze[p.row][p.col] = 2;
+
+    struct point tmp = {row , col};
+    p = tmp;
+
+    if(p.row == MAX_ROW - 1&& p.col == MAX_COL - 1)
+    {
+        return p;
+    }
+    if(p.col + 1 < MAX_COL && maze[p.row][p.col + 1] == 0)
+    {
+        col += 1;
+        tmp = recurse_helper(row, col, p);
+        printf("(%d, %d)\n", tmp.row, tmp.col);
+        return p;
+    }
+    if(p.row + 1 < MAX_ROW && maze[p.row + 1][p.col] == 0)
+    {
+        row += 1;
+        tmp = recurse_helper(row, col, p);
+        printf("(%d, %d)\n", tmp.row, tmp.col);
+        return p;
+    }
+    if(p.row - 1 >= 0 && maze[p.row - 1][p.col] == 0)
+    {
+        row -= 1;
+        tmp = recurse_helper(row, col, p);
+        printf("(%d, %d)\n", tmp.row, tmp.col);
+        return p;
+    }
+    if(p.col - 1 >= 0 && maze[p.row][p.col - 1] == 0)
+    {
+        col -= 1;
+        tmp = recurse_helper(row, col, p);
+        printf("(%d, %d)\n", tmp.row, tmp.col);
+        return p;
+    }
+}
+
+static void recurse_solve_mazeV2()
+{
+    struct point p = {0, 0};
+
+    maze[p.row][p.col] = 2;
+
+    p = recurse_helper(0, 0, p);
+    printf("(%d, %d)\n", p.row , p.col);
 }
 
 static int solve_maze()
@@ -396,12 +516,24 @@ static int solve_maze()
             visit(p.row, p.col - 1, p);
         print_maze();
     }
+    while(!is_empty())
+    {
+        maze_pop();
+    }
     if(p.row == MAX_ROW - 1 && p.col == MAX_COL - 1)
     {
         printf("(%d, %d)\n", p.row, p.col);
-        while(predeccessor[p.row][p.col].row != -1)//?
+        maze_push(p);
+        while(predeccessor[p.row][p.col].row != -1)
         {
             p = predeccessor[p.row][p.col];
+            maze_push(p);
+            printf("(%d, %d)\n", p.row, p.col);
+        }
+        printf("print the forward path:\n");
+        while(!is_empty())
+        {
+            p = maze_pop();
             printf("(%d, %d)\n", p.row, p.col);
         }
     }else{
@@ -410,10 +542,13 @@ static int solve_maze()
     return 0;
 }
 
+
 void test_maze(void)
 {
-    print_maze();
-    solve_maze();
+    //print_maze();
+    //solve_maze();
+    //solve_mazeV2();
+    recurse_solve_mazeV2();
 }
 
 int test_ex_10_1(void)
