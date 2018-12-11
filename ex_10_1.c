@@ -308,7 +308,9 @@ void test_stack()
     }
 }
 
+
 /*
+-------------------------------------------------------------------------------------------
 solve the maze
 */
 #define MAX_ROW 5
@@ -328,7 +330,6 @@ static int maze[MAX_ROW][MAX_COL] = {
                    {0, 0, 0, 0, 0}};
 
 struct point {int row, col;} maze_stack[512];
-
 
 static void maze_push(struct point p)
 {
@@ -390,7 +391,9 @@ static void visit(int row, int col, struct point pre)
     maze_push(visit_point);
 
 }
-
+/*
+using less space structure
+*/
 static int solve_mazeV2()
 {
     struct point p = {0, 0};
@@ -482,6 +485,7 @@ static struct point recurse_helper(int row, int col, struct point p)
         printf("(%d, %d)\n", tmp.row, tmp.col);
         return p;
     }
+    return p;
 }
 
 static void recurse_solve_mazeV2()
@@ -542,13 +546,175 @@ static int solve_maze()
     return 0;
 }
 
+/**
+ * using queue to solve the same question
+ *
+*/
+struct point_q
+{
+    int row, col, predecessor;
+}queue[512];
+int head = 0, tail = 0;
 
+void enqueue(struct point_q p)
+{
+    queue[tail] = p;
+    tail++;
+}
+
+struct point_q dequeue(void)
+{
+    head++;
+    return queue[head - 1];
+}
+
+int is_empty_q(void)
+{
+    return head == tail;
+}
+
+void visit_q(int row, int col)
+{
+    struct point_q visit_point = {row, col, head - 1};
+    maze[row][col] = 2;
+    enqueue(visit_point);
+}
+
+int solve_maze_q(void)
+{
+    struct point_q p = {0, 0, -1};
+
+    maze[p.row][p.col] = 2;
+    enqueue(p);
+
+    while(!is_empty_q())
+    {
+        p = dequeue();
+        if(p.row == MAX_ROW - 1 && p.col == MAX_COL - 1)
+            break;
+        if(p.col + 1 < MAX_COL && maze[p.row][p.col + 1] == 0)
+            visit_q(p.row, p.col + 1);
+        if(p.row + 1 < MAX_ROW && maze[p.row + 1][p.col] == 0)
+            visit_q(p.row + 1, p.col);
+        if(p.col - 1 >= 0 && maze[p.row][p.col - 1] == 0)
+            visit_q(p.row, p.col - 1);
+        if(p.row - 1 >= 0 && maze[p.row - 1][p.col] == 0)
+            visit_q(p.row - 1, p.col);
+        print_maze();
+    }
+    if(p.row == MAX_ROW - 1 && p.col == MAX_COL - 1)
+    {
+        printf("(%d, %d)\n", p.row, p.col);
+        while(p.predecessor != -1)
+        {
+            p = queue[p.predecessor];
+            printf("(%d, %d)\n", p.row, p.col);
+        }
+    }else{
+        printf("No path!\n");
+    }
+    return 0;
+}
+
+/**
+ * using the circle queue to solve the problem
+*/
+#define MAX_LEN  6
+
+struct point c_queue[MAX_LEN];
+
+void c_enqueue(struct point p)
+{
+    c_queue[tail] = p;
+    tail++;
+    if(tail == MAX_LEN)
+        tail = 0;
+}
+
+struct point c_dequeue(void)
+{
+    head++;
+    if(head == MAX_LEN)
+    {
+        head = 0;
+    }
+    return c_queue[head - 1];
+}
+
+int c_is_empty(void)
+{
+    return head == tail;
+}
+
+void visit_cq(int row, int col, struct point p)
+{
+    unsigned char temp = p.row << 4;
+    struct point visit_point = {row, col};
+    temp |= p.col;
+    pre[row][col] = temp;
+    maze[row][col] = 2;
+    c_enqueue(visit_point);
+}
+
+int solve_maze_cq()
+{
+    head = tail = 0;
+    struct point p = {0, 0};
+
+    maze[p.row][p.col] = 2;
+    c_enqueue(p);
+
+    while(!c_is_empty())
+    {
+        p = c_dequeue();
+        if(p.row == MAX_ROW - 1 && p.col == MAX_COL - 1)
+            break;
+        if(p.col + 1 < MAX_COL && maze[p.row][p.col + 1] == 0)
+            visit_cq(p.row, p.col + 1, p);
+        if(p.row + 1 < MAX_ROW && maze[p.row + 1][p.col] == 0)
+            visit_cq(p.row + 1, p.col, p);
+        if(p.col - 1 >= 0 && maze[p.row][p.col - 1] == 0)
+            visit_cq(p.row, p.col - 1, p);
+        if(p.row - 1 >= 0 && maze[p.row - 1][p.col] == 0)
+            visit_cq(p.row - 1, p.col, p);
+        print_maze();
+    }
+    if(p.row == MAX_ROW - 1 && p.col == MAX_COL - 1)
+    {
+        printf("(%d, %d)\n", p.row, p.col);
+        maze_push(p);
+        while(pre[p.row][p.col]!= 0xFF)
+        {
+            unsigned char t;
+            t = pre[p.row][p.col];
+            struct point pp = {t >> 4, t & 0x0F};
+            p = pp;
+            maze_push(p);
+            printf("(%d, %d)\n", p.row, p.col);
+        }
+        printf("print the forward path:\n");
+        while(!is_empty())
+        {
+            p = maze_pop();
+            printf("(%d, %d)\n", p.row, p.col);
+        }
+    }else{
+        printf("No path!\n");
+    }
+    return 0;
+}
+
+/*
+The main enter for know the functions
+*/
 void test_maze(void)
 {
     //print_maze();
-    //solve_maze();
-    //solve_mazeV2();
-    recurse_solve_mazeV2();
+    //solve_maze();     //normal struct, using struct point predeccessor[MAX_ROW][MAX_COL]
+    //solve_mazeV2();   // using unsigned char pre[MAX_ROW][MAX_COL] to save space
+    //recurse_solve_mazeV2();     //using recurse method to solve the same questions.
+    //solve_maze_q();   //using the queue to solve the problem, BFS, breadth first search
+    solve_maze_cq();    //using the circle queue to solve the problems
 }
 
 int test_ex_10_1(void)
