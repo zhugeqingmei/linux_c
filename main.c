@@ -5,6 +5,7 @@
 #include "systemPro.h"
 #include "my_complex.h"
 #include "ex_10_1.h"
+#include "unicode.h"
 
 void test_struct()
 {
@@ -192,6 +193,12 @@ void test_array()
 
 }
 
+void test_default_char()
+{
+    char t = 0xFF;
+    printf("test_default_char:%d\n",t);
+}
+
 int main()
 {
     //发出声音
@@ -223,7 +230,11 @@ int main()
     //test_rand();
 //    ex8_5_scissor();
 
-    test_ex_10_1();
+    //test_ex_10_1();
+
+    //test_default_char();
+
+    test_unicode();
     return 0;
 }
 

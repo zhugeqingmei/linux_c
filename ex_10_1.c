@@ -554,7 +554,7 @@ struct point_q
 {
     int row, col, predecessor;
 }queue[512];
-int head = 0, tail = 0;
+static int head = 0, tail = 0;
 
 void enqueue(struct point_q p)
 {
