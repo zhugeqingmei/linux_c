@@ -6,6 +6,8 @@
 #include "my_complex.h"
 #include "ex_10_1.h"
 #include "unicode.h"
+#include <sys/types.h>
+#include <unistd.h>
 
 void test_struct()
 {
@@ -199,42 +201,85 @@ void test_default_char()
     printf("test_default_char:%d\n",t);
 }
 
+void test_shift(void)
+{
+    int i = 1;
+    int j = 0xcFFFFFF3;
+    i <<= 33;
+    printf("i shift 33:%d\n", i);
+    printf("%x\n", 0xCFFFFFF3>>2);
+    printf("%x\n", j>>2);
+
+    printf("%x\n", (~0 << 8));
+    printf("%x\n", ~(~0 << 8));
+}
+
+int test_fork(void)
+{
+    pid_t pid;
+    char *message;
+    int n;
+    pid = fork();
+    if(pid < 0)
+    {
+        perror("fork failed");
+        exit(1);
+    }
+    if(pid == 0)
+    {
+        message = "This is the child\n";
+        n = 6;
+    }else
+    {
+        message = "This is the parent\n";
+        n = 3;
+    }
+    for(; n > 0; n--)
+    {
+        printf(message);
+        // sleep(1);
+    }
+    return 0;
+}
+
 int main()
 {
     //发出声音
-//    printf("s\a\b");
-//    foo();
-//    foo();
-//    testOperator();
-//    getNumber(234);
-//    printf("factorial(10)=%d\n",factorial(10));
-//
-//    printf("my_gcd(10,5)=%d\n",my_gcd(10,5));
-//    printf("my_gcd(10,5)=%d\n",my_gcd(5,10));
+    // printf("s\a\b");
+    // foo();
+    // foo();
+    // testOperator();
+    // getNumber(234);
+    // printf("factorial(10)=%d\n",factorial(10));
 
-    //systemProMain();
+    // printf("my_gcd(10,5)=%d\n",my_gcd(10,5));
+    // printf("my_gcd(10,5)=%d\n",my_gcd(5,10));
 
-    //factorial_loop(10);
-    //count_9();
-//    printf("is_prime(9):%d\n",is_prime(9));
-//    printf("is_prime(19):%d\n",is_prime(19));
-//    printf("5%%1=%d\n",5%1);
-    //print_prime();
-    //print_9X9();
-//    print_diamond(5,'*');
-//    print_diamond(13,'*');
-    //test_complex();
-    //test_rational();
-    //test_array();
-    //excise();
-    //test_rand();
-//    ex8_5_scissor();
+    // systemProMain();
 
-    //test_ex_10_1();
+    // factorial_loop(10);
+    // count_9();
+    // printf("is_prime(9):%d\n",is_prime(9));
+    // printf("is_prime(19):%d\n",is_prime(19));
+    // printf("5%%1=%d\n",5%1);
+    // print_prime();
+    // print_9X9();
+    // print_diamond(5,'*');
+    // print_diamond(13,'*');
+    // test_complex();
+    // test_rational();
+    // test_array();
+    // excise();
+    // test_rand();
+    // ex8_5_scissor();
 
-    //test_default_char();
+    // test_ex_10_1();
 
-    test_unicode();
+    // test_default_char();
+
+    // test_unicode();
+    // test_shift();
+    test_fork();
     return 0;
 }
 
