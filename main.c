@@ -277,9 +277,9 @@ int main()
 
     // test_default_char();
 
-    // test_unicode();
+    test_unicode();
     // test_shift();
-    test_fork();
+    // test_fork();
     return 0;
 }
 
