@@ -9,8 +9,18 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+struct {
+    char a;
+    short b;
+    int c;
+    char d;
+} s;
+
 void test_struct()
 {
+
+    printf("struct size:%lu\n", sizeof(s));
+    printf("sizeof int:%lu", sizeof(int));
 //    struct complex
 //    {
 //        double x,y;
@@ -277,9 +287,11 @@ int main()
 
     // test_default_char();
 
-    test_unicode();
+    // test_unicode();
     // test_shift();
     // test_fork();
+
+    test_struct();
     return 0;
 }
 
