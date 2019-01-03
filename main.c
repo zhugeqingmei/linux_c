@@ -9,18 +9,23 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-struct {
+struct my_struct {
     char a;
     short b;
     int c;
     char d;
-} s;
+};
 
 void test_struct()
 {
-
+    struct my_struct s = {'c', 1, 2, 'v'};
+    struct my_struct *ps = &s;
     printf("struct size:%lu\n", sizeof(s));
-    printf("sizeof int:%lu", sizeof(int));
+    printf("sizeof int:%lu\n", sizeof(int));
+
+    printf("address of a:%p\n", &(ps->a));
+    printf("address of a:%p\n", &(ps->b));
+
 //    struct complex
 //    {
 //        double x,y;
@@ -252,6 +257,92 @@ int test_fork(void)
     return 0;
 }
 
+void test_order()
+{
+    char str[] = "Hello";
+    printf("%c\n", str[0]);
+    printf("address of 'H':%p\n", &str[0]);
+    printf("address of 'e':%p\n", &str[1]);
+}
+
+typedef struct {
+    unsigned int one:1;
+    unsigned int two:3;
+    unsigned int three:10;
+    unsigned int four:5;
+    unsigned int :2;
+    unsigned int five:8;
+    unsigned int six:8;
+} demo_type;
+
+void test_bitfield()
+{
+    demo_type s = { 1, 5, 513, 17, 129, 0x81 };
+    printf("sizeof demo_type = %lu\n",
+    sizeof(demo_type));
+    printf("values: s=%u,%u,%u,%u,%u,%u\n",
+    s.one, s.two, s.three, s.four, s.five,
+    s.six);
+
+}
+
+typedef union {
+    struct {
+        unsigned int one:1;
+        unsigned int two:3;
+        unsigned int three:10;
+        unsigned int four:5;
+        unsigned int :2;
+        unsigned int five:8;
+        unsigned int six:8;
+    } bitfield;
+    unsigned char byte[8];
+} union_type;
+
+void test_union()
+{
+    union_type u = {{ 1, 5, 513, 17, 129, 0x81 }};
+    printf("sizeof demo_type = %lu\n",
+    sizeof(demo_type));
+    printf("values: u=%u,%u,%u,%u,%u,%u\n",
+    u.bitfield.one, u.bitfield.two,
+    u.bitfield.three,
+    u.bitfield.four, u.bitfield.five,
+    u.bitfield.six);
+    printf("hex dump of u: %x %x %x %x %x %x %x %x \n",
+    u.byte[0], u.byte[1], u.byte[2],
+    u.byte[3],
+    u.byte[4], u.byte[5], u.byte[6],
+    u.byte[7]);
+}
+
+void test_bele()
+{
+    unsigned int a = 0xFFFFFF00;
+    unsigned int *p = &a;
+    unsigned char b = (unsigned char )(*p);
+    if(b == 0)
+    {
+        printf("Little end\n");
+    }else if(b == 0xFF)
+    {
+        printf("Big end\n");
+    }
+}
+
+void test_inline()
+{
+    int a = 10, b;
+    __asm__("movl %1, %%eax\n\t"
+            "movl %%eax, %0\n\t"
+            :"=r"(b)
+            :"r"(a)
+            :"%eax"
+            );
+    printf("Result: %d, %d\n",a, b);
+    
+}
+
 int main()
 {
     //发出声音
@@ -291,7 +382,12 @@ int main()
     // test_shift();
     // test_fork();
 
-    test_struct();
+    // test_struct();
+    // test_order();
+    // test_bitfield();
+    // test_union();
+    // test_bele();
+    test_inline();
     return 0;
 }
 
