@@ -1,5 +1,6 @@
 #include "stack.h"
 
+static int AAA = 10;
 
 static item_t stack[512];
 static int top = 0;

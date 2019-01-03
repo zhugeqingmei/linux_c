@@ -2,6 +2,10 @@
 #include "main.h"
 #include "stack.h"
 #include "maze.h"
+#include "new_mode.h"
+
+int AAA;
+
 struct point predecessor[MAX_ROW][MAX_COL] = {
                             {{-1,-1}, {-1,-1}, {-1,-1}, {-1,-1}, {-1,-1}},
                             {{-1,-1}, {-1,-1}, {-1,-1}, {-1,-1}, {-1,-1}},
@@ -48,5 +52,10 @@ int main(void)
         }
     } else
         printf("No path!\n");
+
+    new_mode();
+    
+    printf("AAA = %d\n", AAA);
+
     return 0;
 }

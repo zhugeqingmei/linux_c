@@ -5,5 +5,5 @@
 void push(item_t);
 item_t pop(void);
 int is_empty(void);
-
+//extern int AAA = 1;
 #endif
