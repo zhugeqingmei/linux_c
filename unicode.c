@@ -1,6 +1,7 @@
 #include "unicode.h"
 #include <stdio.h>
 #include <locale.h>
+#include <wchar.h>
 
 int zh_bmp()
 {
@@ -9,7 +10,9 @@ int zh_bmp()
         fprintf(stderr, "Can't set the specified locale! Check LANG, LC_CYTPE, LCALL.\n");
         return 1;
     }
-    printf("%ls", L"你好\n");
+    wchar_t wc = L'你';
+    printf("wchar_t string:%ls", L"你好\n");
+    printf("wchar_t char:%lc\n", wc);
     printf("你你好孟\n");
     return 0;
 }
@@ -51,8 +54,8 @@ void test_side_effect()
 
 int test_unicode()
 {
-    // zh_bmp();
+    zh_bmp();
     // test_bits();
-    test_side_effect();
+    // test_side_effect();
     return 0;
 }

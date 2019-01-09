@@ -356,7 +356,7 @@ int main()
     // printf("my_gcd(10,5)=%d\n",my_gcd(10,5));
     // printf("my_gcd(10,5)=%d\n",my_gcd(5,10));
 
-    // systemProMain();
+    systemProMain();
 
     // factorial_loop(10);
     // count_9();
@@ -387,7 +387,7 @@ int main()
     // test_bitfield();
     // test_union();
     // test_bele();
-    test_inline();
+    // test_inline();
     return 0;
 }
 

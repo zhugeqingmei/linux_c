@@ -214,12 +214,13 @@ void testSelect()
 
 void systemProMain()
 {
-    getLibCVersion();
+    // getLibCVersion();
     //teseOpenClose();
     //testCsapp10_1();
     //testWrite();
     //testLockSet();
     //testSelect();
+    
 }
 
 
